@@ -1,37 +1,43 @@
 import React from "react";
+import useConversation from "../../zustand/useConversation";
+import { useSocketContext } from "../../context/SocketContext";
 
-const Conversation = () => {
+const Conversation = ({conversation,lastIdx,emoji}) => {
+  const {selectedConversation, setSelectedConversation} = useConversation();
+
+  const isSelected = selectedConversation?._id === conversation._id;
+  const {onlineUsers} = useSocketContext();
+  const isOnline = onlineUsers.includes(conversation._id)
+
   return (
     <>
       <div
-        className="d-flex gap-2 align-items-center rounded p-2 py-1"
+        className={`d-flex gap-2 align-items-center rounded p-2 py-1
+         ${isSelected ? "bg-info" : ""}
+        `}
+        onClick={() => setSelectedConversation(conversation)}
         style={{ cursor: "pointer" }}
       >
+
         <div className="position-relative ">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="40"
-            height="45"
-            fill="currentColor"
-            className="bi bi-person-circle"
-            viewBox="0 0 16 16"
-          >
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-            <path
-              fillRule="evenodd"
-              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 
-              11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 
-              2.37A7 7 0 0 0 8 1"
-            />
-          </svg>
+        <img src={conversation.profilePic} alt="User Profile" className="rounded-circle" style={{ width: "40px", height: "40px" }}/>
+          {isOnline && (
+            <div
+              className="position-absolute rounded-circle bg-success border border-white"
+              style={{ width: "10px", height: "10px", bottom: "0", right: "0" }}
+            ></div>
+          )}
         </div>
         <div className="d-flex flex-column flex-fill">
           <div className="d-flex gap-3 justify-content-between">
-            <p className="fw-bold text-light mb-0">bhargav m</p>
-            <span className="fs-5">**</span>
+            <p className="fw-bold text-light mb-0">{conversation.fullName}</p>
+            <span className="fs-5">{emoji}</span>
           </div>
         </div>
       </div>
+
+      {!lastIdx && <div className="border-top m-0 p-0" style={{ height: "1px" }} />}
+
       <hr className="my-0 py-0" style={{ height: "1px" }} />
     </>
   );

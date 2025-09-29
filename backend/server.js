@@ -36,7 +36,8 @@ app.use("/api/users", userRoutes);
 // Serve frontend build in production (no leading slash in join)
 const distPath = path.join(__dirname, "frontend", "dist");
 app.use(express.static(distPath));
-app.get("*", (req, res) => {
+// Express v5 uses path-to-regexp v6; use "/*" for catch-all instead of "*"
+app.get("/*", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 

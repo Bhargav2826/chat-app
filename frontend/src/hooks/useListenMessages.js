@@ -13,7 +13,7 @@ const useListenMessages = () => {
 	useEffect(() => {
 		console.log("useListenMessages: socket object", socket); // Add this line
 		socket?.on("newMessage", (newMessage) => {
-			console.log("New message received via socket:", newMessage); // Re-add this line temporarily
+			console.log("New message received via socket:", newMessage); // ENSURE THIS IS PRESENT
 			newMessage.shouldShake = true;
 			const sounds = new Audio(notificationSound);
 			sounds.play();

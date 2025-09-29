@@ -9,20 +9,22 @@ const Messages = () => {
   useListenMessages();
   const messagesEndRef = useRef(null);
 
+  const safeMessages = Array.isArray(messages) ? messages : [];
+
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [safeMessages]);
 
   console.log("Current messages state:", messages);
 
   return (
     <div className="px-3 d-flex flex-column flex-fill overflow-auto">
       {/* Messages */}
-      {!loading && messages.length > 0 && (
+      {!loading && safeMessages.length > 0 && (
         <>
-          {messages.map((message) => (
+          {safeMessages.map((message) => (
             <Message key={message._id} message={message} />
           ))}
           <div ref={messagesEndRef} />
@@ -39,7 +41,7 @@ const Messages = () => {
       )}
 
       {/* Empty State */}
-      {!loading && messages.length === 0 && (
+      {!loading && safeMessages.length === 0 && (
         <p className="text-center">Send a message to start a conversation</p>
       )}
     </div>

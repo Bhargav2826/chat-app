@@ -21,7 +21,7 @@ function App() {
       <Toaster/>
 
 
-      <h1>hello</h1>
+  
     </div>
   );
 } 

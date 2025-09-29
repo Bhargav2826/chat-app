@@ -6,18 +6,22 @@ import "./Message.css"; // Import the new CSS file
 const Message = ({ message }) => {
 	const { authUser } = useAuthContext();
 	const { selectedConversation } = useConversation();
-	const fromMe = message.senderID === authUser._id;
+	const senderRaw = message?.senderID ?? message?.senderId ?? message?.sender?._id;
+	const myIdRaw = authUser?._id;
+	const sender = senderRaw != null ? String(senderRaw) : undefined;
+	const myId = myIdRaw != null ? String(myIdRaw) : undefined;
+	const fromMe = Boolean(sender && myId && sender === myId);
 	const formattedTime = message?.createdAt ? extractTime(message.createdAt) : "";
 	
-	const chatClassName = fromMe 
-  ? "d-flex justify-content-end" 
-  : "d-flex justify-content-start";
+	// Debug alignment
+	console.log("Message align debug:", { authId: myId, senderID: message?.senderID, senderId: message?.senderId, computedSender: sender, fromMe });
+	
 	const profilePic = fromMe ? authUser.profilePic : selectedConversation?.profilePic;
 	const messageBubbleClass = fromMe ? "my-message-bubble" : "other-message-bubble";
 	const shakeClass = message.shouldShake ? "shake" : "";
 
 	return (
-		<div className={chatClassName}>
+		<div className="w-100" style={{ display: 'flex', justifyContent: fromMe ? 'flex-end' : 'flex-start' }}>
 			{/* Avatar for others' messages */}
 			{!fromMe && (
 				<div className="me-2"> 

@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { useAuthContext } from "./AuthContext";
-import io from "socket.io-client";
+io(import.meta.env.VITE_SOCKET_URL || window.location.origin, { query: { userId: authUser._id } })
 
 const SocketContext = createContext();
 

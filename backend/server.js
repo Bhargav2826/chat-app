@@ -28,17 +28,19 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-// Serve frontend build in production (no leading slash in join)
+// Serve frontend build in production
 const distPath = path.join(__dirname, "frontend", "dist");
 app.use(express.static(distPath));
-// Express v5 uses path-to-regexp v6; use "/*" for catch-all instead of "*"
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(distPath, "index.html"));
+
+// Fallback: for any non-API request, serve index.html (avoids path-to-regexp issues)
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(distPath, 'index.html'));
 });
 
 console.log("Attempting to start server on port", PORT); // Add this line

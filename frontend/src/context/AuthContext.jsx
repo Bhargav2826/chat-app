@@ -1,17 +1,17 @@
-import { createConnection } from "mongoose";
-import { createContext, useState, useContext } from 'react';
+import { useAuthContext } from "../context/AuthContext";
 
+const Navbar = () => {
+  const { authUser } = useAuthContext(); // ✅ get it from context
 
-export const AuthContext = createContext();
+  return (
+    <nav>
+      {authUser ? (
+        <span>Welcome {authUser.username}</span>
+      ) : (
+        <span>Please login</span>
+      )}
+    </nav>
+  );
+};
 
-export const useAuthContext = () => {
-    return useContext(AuthContext);
-}
-
-export const AuthContextProvider = ({ children }) => {
-    const [authUser,setAuthUser] = useState(JSON.parse(localStorage.getItem("chat-user")) || null);
- return <AuthContext.Provider value={{authUser,setAuthUser}}>
-    {children}
-    
-    </AuthContext.Provider>;
-}
+export default Navbar;

@@ -33,10 +33,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-// Serve frontend build in production
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// Serve frontend build in production (no leading slash in join)
+const distPath = path.join(__dirname, "frontend", "dist");
+app.use(express.static(distPath));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
 console.log("Attempting to start server on port", PORT); // Add this line

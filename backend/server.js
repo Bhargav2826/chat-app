@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -11,7 +12,7 @@ import messageRoutes from "./routes/message.routes.js";
 import userRoutes from "./routes/user.routes.js";
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
-import { initSocket, io, getReceiverSocketId } from "./socket/socket.js"; // Import initSocket, io, and getReceiverSocketId
+import { initSocket } from "./socket/socket.js"; // Import initSocket, io, and getReceiverSocketId
 
 
 const __dirname = path.resolve();
@@ -35,12 +36,20 @@ app.use("/api/users", userRoutes);
 
 // Serve frontend build in production
 const distPath = path.join(__dirname, "frontend", "dist");
-app.use(express.static(distPath));
+console.log("Static dist path:", distPath);
+console.log("Dist exists:", fs.existsSync(distPath));
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+}
 
-// Fallback: for any non-API request, serve index.html (avoids path-to-regexp issues)
+// Fallback: for any non-API request, serve index.html if available
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
-  res.sendFile(path.join(distPath, 'index.html'));
+  const indexPath = path.join(distPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  res.status(404).send("Frontend build not found. Ensure Render Build Command runs 'npm run build' and that files exist in frontend/dist.");
 });
 
 console.log("Attempting to start server on port", PORT); // Add this line

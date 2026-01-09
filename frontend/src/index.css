@@ -1,0 +1,26 @@
+body {
+  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("/back.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  backdrop-filter: blur(10px);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* For mobile and tablet support */
+@media (max-width: 1024px) {
+  body {
+    background-attachment: scroll;
+    background-size: cover;
+  }
+}
+
+/* For high-resolution displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    background-size: cover;
+  }
+}
